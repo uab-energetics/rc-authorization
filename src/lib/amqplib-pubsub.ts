@@ -6,8 +6,8 @@ export interface PubSubEvent {
     payload: object
 }
 
-export interface PubSubMessage {
-    data: object
+export interface PubSubMessage<T> {
+    data: T
     ack: Function
 }
 
@@ -40,8 +40,8 @@ export const rabbitmqConnectionURI = ({host, user, pass, port = 5672}: Connectio
     return `amqp://${_auth}${host}${_port}`
 }
 
-export const rabbitmqObservable = (rabbitChannel, exchange: string): Observable<PubSubMessage> => {
-    let subject = new Subject<PubSubMessage>()
+export const rabbitmqObservable = (rabbitChannel, exchange: string): Observable<PubSubMessage<any>> => {
+    let subject = new Subject<PubSubMessage<any>>()
 
     rabbitChannel.assertExchange(exchange, 'fanout', {durable: false})
     rabbitChannel.assertQueue('', {exclusive: true}).then(q => {

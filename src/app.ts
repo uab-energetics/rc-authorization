@@ -27,7 +27,6 @@ rabbit$.then( ({ channel }) =>
         .pipe( tap(console.log) )
         .subscribe( msg => resourceCreatedObservable$.next(msg) ) )
 
-
 /* BOOTSTRAP THE APP */
 const app = express()
 app.set('port', env('PORT', 5000))

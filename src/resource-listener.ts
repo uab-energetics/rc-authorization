@@ -1,8 +1,15 @@
-import {PubSubEvent, PubSubMessage, rabbitmqObservable} from "./lib/amqplib-pubsub";
+import {PubSubMessage} from "./lib/amqplib-pubsub";
 import {Subject} from "rxjs/Subject";
-import {tap} from "rxjs/operators";
 
 
 export const RESOURCE_CREATED_TOPIC = 'resource.created'
 
-export const resourceCreatedObservable$ = new Subject<PubSubMessage>()
+export interface ResourceCreatedPayload {
+    parentType: string
+    parentID: any
+    resourceType: string
+    resourceID: any
+    ownerID: any
+}
+
+export const resourceCreatedObservable$ = new Subject<PubSubMessage<ResourceCreatedPayload>>()
