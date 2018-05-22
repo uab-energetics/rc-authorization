@@ -54,7 +54,6 @@ rabbit$
 // publish resource.created events
 rabbit$.then( ({ channel }) =>
     rabbitmqSubscribe(channel, RESOURCE_CREATED_TOPIC)
-        .pipe( tap(console.log) )
         .subscribe( msg => resourceCreatedObservable$.next(msg) ) )
 
 

@@ -7,6 +7,11 @@ import {Identity} from "../models/Identity";
 export let resourceKey = (type: string, id) => `${type}:${id}`
 
 export let createResourcePolicy = (event: ResourceCreatedPayload) => {
+    // if({})
+    //     return console.log('received request to make resource policy')
+
+    console.log('making resource', event)
+
     let conn = getConnection()
 
     let resRepo = conn.getRepository(Resource)
@@ -15,20 +20,21 @@ export let createResourcePolicy = (event: ResourceCreatedPayload) => {
 
     // create the Resource
     let resource = makeResource(resRepo, event)
+    console.log(resource)
 
     // TODO - set the parent ID
-
     // TODO - create the default policy
-
     // TODO - union/inherit the parent policy
 
-    return resRepo.insert(resource)
+    return resRepo.save(resource) // save() does an upsert
 }
 
 let makePolicy = (repo, owner) => {}
 
-let makeResource = (repo, {resourceType, resourceID}): Resource =>
-    repo.create({
-        id: resourceKey(resourceType, resourceID),
-        type: resourceType
+let makeResource = (repo, event): Resource => {
+    console.log(event)
+    return repo.create({
+        id: resourceKey(event.resourceType, event.resourceID),
+        type: event.resourceType
     })
+}
