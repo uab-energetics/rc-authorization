@@ -1,0 +1,41 @@
+version: '3.3'
+
+networks:
+  default:
+    external:
+      name: research-coder
+
+services:
+
+  rc-authorization:
+    build: .
+    container_name: rc-authorization
+    volumes:
+      - ./:/app
+    environment:
+      RABBITMQ_HOST: rc-rabbitmq
+      MYSQL_HOST: rc-authorization-db
+      MYSQL_DATABASE: authorization
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+    command: npm run watch-test
+
+  rc-authorization-db:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: authorization
+
+  rc-rabbitmq:
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
