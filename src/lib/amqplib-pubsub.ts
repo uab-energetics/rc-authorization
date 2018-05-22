@@ -26,6 +26,8 @@ export const createRabbitMQConnection = async (amqp, params: ConnectionParams) =
         channel$ = conn.createChannel())
     console.log('connecting on..', uri)
 
+    connection$.catch(console.error)
+
     let connection = await connection$
     let channel = await channel$
     return { connection, channel }

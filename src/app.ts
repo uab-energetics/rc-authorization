@@ -38,7 +38,7 @@ export const database$ = createConnection({
 })
 database$
     .then( _ => app.emit('mysql-connected'))
-    .catch( _ => app.emit('mysql-failed'))
+    .catch( console.error )
 
 
 /* CONNECT TO RABBITMQ */
