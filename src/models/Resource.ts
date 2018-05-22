@@ -11,7 +11,7 @@ export class Resource {
     @Column('text')
     type: string
 
-    @OneToOne(type => Resource)
+    @OneToOne(type => Resource, null, {  nullable: true })
     @JoinColumn()
     parent: Resource
 
