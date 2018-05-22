@@ -32,12 +32,12 @@ export const createRabbitMQConnection = async (amqp, params: ConnectionParams) =
 }
 
 export const rabbitmqConnectionURI = ({host, user, pass, port = 5672}: ConnectionParams) => {
-    let auth = ''
-    if (user) auth = user + ':' + pass + '@'
+    let _auth = ''
+    if (user) _auth = user + ':' + pass + '@'
     let _port = ''
     if (port) _port = ':' + port
 
-    return `amqp://${auth}${host}${_port}`
+    return `amqp://${_auth}${host}${_port}`
 }
 
 export const rabbitmqObservable = (rabbitChannel, exchange: string): Observable<PubSubMessage> => {
