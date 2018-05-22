@@ -9,6 +9,7 @@
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/index.js",
     "watch-test": "npm run test -- --watchAll",
+    "seed-db": "ts-node src/database/seeds/_seeder.ts",
     "test": "jest --forceExit --coverage --verbose"
   },
   "keywords": [
@@ -23,6 +24,7 @@
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "express-validator": "^5.2.0",
+    "glob": "^7.1.2",
     "mysql": "^2.15.0",
     "node-laravel-config": "^1.0.0",
     "rxjs": "^5.5.10",
