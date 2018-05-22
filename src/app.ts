@@ -4,7 +4,7 @@ import * as bodyParser from 'body-parser'
 import * as amqplib from 'amqplib'
 
 import {config, env, initEnvironment} from "node-laravel-config";
-import {loadConfigurationSettings} from "./config";
+import * as configHelper from "./config";
 import {createRabbitMQConnection, rabbitmqObservable} from "./lib/amqplib-pubsub";
 import {tap} from "rxjs/operators";
 import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "./resource-listener";
@@ -12,7 +12,7 @@ import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "./resource-lis
 /* LOAD ENVIRONMENT VALUES */
 dotenv.config({ path: ".env" });
 initEnvironment(process.env)
-loadConfigurationSettings()
+configHelper.loadConfigurationSettings()
 
 /* CONNECT TO RABBITMQ */
 export const rabbit$ = createRabbitMQConnection(amqplib, {
