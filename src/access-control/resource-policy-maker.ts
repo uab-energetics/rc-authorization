@@ -6,7 +6,7 @@ import {Identity} from "../models/Identity";
 
 export let resourceKey = (type: string, id) => `${type}:${id}`
 
-export let resourcePolicyMaker = (event: ResourceCreatedPayload) => {
+export let createResourcePolicy = (event: ResourceCreatedPayload) => {
     let conn = getConnection()
 
     let resRepo = conn.getRepository(Resource)
