@@ -27,7 +27,11 @@ resourceCreatedObservable$
     .pipe(
         filter( msg => {
             let {error} = Joi.validate(msg.data, resourceCreatedSchema)
-            return error === null
+            if(error) {
+                console.log('Received "resource.created" event with invalid schema', error.details)
+                return false
+            }
+            return true
         })
     )
     .subscribe(

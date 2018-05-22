@@ -51,11 +51,11 @@ export const rabbitmqSubscribe = (rabbitChannel, exchange: string): Observable<P
             let decodedPayload = msg.content.toString()
             try {
                 decodedPayload = JSON.parse(msg.content.toString())
+                let acknowledgeFunc = () => rabbitChannel.ack(msg)
+                subject.next({data: decodedPayload, ack: acknowledgeFunc})
             } catch (e) {
-                console.warn('could not parse json', decodedPayload)
+                console.warn('Warning: Could not parse JSON message: ', decodedPayload)
             }
-            let acknowledgeFunc = () => rabbitChannel.ack(msg)
-            subject.next({data: decodedPayload, ack: acknowledgeFunc})
         }
 
         rabbitChannel.bindQueue(q.queue, exchange, '')
