@@ -7,9 +7,9 @@ import {config, env, initEnvironment} from "node-laravel-config";
 import * as configHelper from "./config";
 import {createRabbitMQConnection, rabbitmqSubscribe} from "./lib/amqplib-pubsub";
 import {tap} from "rxjs/operators";
-import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "./resource-listener";
 import {createConnection} from "typeorm";
 import {entities as dbmodels} from "./database/entities";
+import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "./access-control/resource-created-listener";
 
 /* LOAD ENVIRONMENT VALUES */
 dotenv.config({ path: ".env" });

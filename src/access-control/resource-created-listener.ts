@@ -1,4 +1,4 @@
-import {PubSubMessage} from "./lib/amqplib-pubsub";
+import {PubSubMessage} from "../lib/amqplib-pubsub";
 import {Subject} from "rxjs/Subject";
 
 

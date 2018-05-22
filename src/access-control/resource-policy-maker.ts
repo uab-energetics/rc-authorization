@@ -1,4 +1,4 @@
-import {ResourceCreatedPayload} from "../resource-listener";
+import {ResourceCreatedPayload} from "./resource-created-listener";
 import {getConnection} from "typeorm";
 import {Resource} from "../models/Resource";
 import {Policy} from "../models/Policy";
@@ -6,7 +6,7 @@ import {Identity} from "../models/Identity";
 
 export let resourceKey = (type: string, id) => `${type}:${id}`
 
-export let createResourcePolicy = (event: ResourceCreatedPayload) => {
+export let resourcePolicyMaker = (event: ResourceCreatedPayload) => {
     let conn = getConnection()
 
     let resRepo = conn.getRepository(Resource)
@@ -14,10 +14,7 @@ export let createResourcePolicy = (event: ResourceCreatedPayload) => {
     let identityRepo = conn.getRepository(Identity)
 
     // create the Resource
-    let resource = resRepo.create({
-        id: resourceKey(event.resourceType, event.resourceID),
-        type: event.resourceType
-    })
+    let resource = makeResource(resRepo, event)
 
     // TODO - set the parent ID
 
@@ -27,3 +24,11 @@ export let createResourcePolicy = (event: ResourceCreatedPayload) => {
 
     return resRepo.insert(resource)
 }
+
+let makePolicy = (repo, owner) => {}
+
+let makeResource = (repo, {resourceType, resourceID}): Resource =>
+    repo.create({
+        id: resourceKey(resourceType, resourceID),
+        type: resourceType
+    })

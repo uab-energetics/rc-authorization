@@ -1,11 +1,11 @@
 import {rabbitmqPublish, rabbitmqSubscribe} from "../src/lib/amqplib-pubsub";
-import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$, ResourceCreatedPayload} from "../src/resource-listener";
 import {tap} from "rxjs/operators";
 import {loadConfigurationSettings} from "../src/config";
 import {database$} from "../src/app";
-import {createResourcePolicy, resourceKey} from "../src/policies/create-resource-policy";
 import {getConnection} from "typeorm";
 import {Resource} from "../src/models/Resource";
+import {resourceKey, resourcePolicyMaker} from "../src/access-control/resource-policy-maker";
+import {ResourceCreatedPayload} from "../src/access-control/resource-created-listener";
 
 /* TESTING DATA */
 let type = 'project'
@@ -24,6 +24,6 @@ afterEach(() =>
         .delete(resourceKey(type, id)));
 
 test('RabbitMQ Subscription Test Case', () =>
-    createResourcePolicy(dummyResourceEvent)
-        .then( result => console.log(result) )
-        .catch( err => console.error(err) ))
+    resourcePolicyMaker(dummyResourceEvent)
+        .then(result => console.log(result))
+        .catch(err => console.error(err)))
