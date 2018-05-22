@@ -11,9 +11,15 @@ export interface PubSubMessage {
     ack: Function
 }
 
+export interface ConnectionParams {
+    host: string
+    user?: string
+    pass?: string
+    port?: number
+}
 
-export const createRabbitMQConnection = async (amqp, {host, user = null, pass = null, port = 5672}) => {
-    let uri = rabbitmqConnectionURI({host, user, pass, port})
+export const createRabbitMQConnection = async (amqp, params: ConnectionParams) => {
+    let uri = rabbitmqConnectionURI(params)
     let connection$, channel$
 
     connection$ = amqp.connect(uri).then(conn =>
@@ -25,7 +31,7 @@ export const createRabbitMQConnection = async (amqp, {host, user = null, pass = 
     return { connection, channel }
 }
 
-export const rabbitmqConnectionURI = ({host, user, pass, port = 5672}) => {
+export const rabbitmqConnectionURI = ({host, user, pass, port = 5672}: ConnectionParams) => {
     let auth = ''
     if (user) auth = user + ':' + pass + '@'
     let _port = ''

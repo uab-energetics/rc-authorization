@@ -18,7 +18,6 @@ services:
       MYSQL_DATABASE: authorization
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
-    command: npm run watch-test
 
   rc-authorization-db:
     image: mysql:5.7

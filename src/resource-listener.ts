@@ -1,4 +1,4 @@
-import {PubSubEvent, PubSubMessage, rabbitmqObservable} from "./amqplib-pubsub";
+import {PubSubEvent, PubSubMessage, rabbitmqObservable} from "./lib/amqplib-pubsub";
 import {Subject} from "rxjs/Subject";
 import {tap} from "rxjs/operators";
 

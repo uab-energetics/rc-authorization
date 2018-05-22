@@ -5,7 +5,9 @@ import * as amqplib from 'amqplib'
 
 import {config, env, initEnvironment} from "node-laravel-config";
 import {loadConfigurationSettings} from "./config";
-import {createRabbitMQConnection} from "./amqplib-pubsub";
+import {createRabbitMQConnection, rabbitmqObservable} from "./lib/amqplib-pubsub";
+import {tap} from "rxjs/operators";
+import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "./resource-listener";
 
 /* LOAD ENVIRONMENT VALUES */
 dotenv.config({ path: ".env" });
@@ -17,9 +19,14 @@ export const rabbit$ = createRabbitMQConnection(amqplib, {
     host: config('rabbitHost'),
     user: config('rabbitUser'),
     pass: config('rabbitPass'),
-} as any)
+})
 
-// rabbit$.then( ({ channel }) => registerListener(channel) )
+// publish resource.created events
+rabbit$.then( ({ channel }) =>
+    rabbitmqObservable(channel, RESOURCE_CREATED_TOPIC)
+        .pipe( tap(console.log) )
+        .subscribe( msg => resourceCreatedObservable$.next(msg) ) )
+
 
 /* BOOTSTRAP THE APP */
 const app = express()

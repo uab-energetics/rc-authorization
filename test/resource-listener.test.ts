@@ -1,5 +1,5 @@
 import * as amqplib from 'amqplib'
-import {createRabbitMQConnection, rabbitmqObservable, rabbitmqPublish} from "../src/amqplib-pubsub";
+import {createRabbitMQConnection, rabbitmqObservable, rabbitmqPublish} from "../src/lib/amqplib-pubsub";
 import {config} from "node-laravel-config/dist";
 import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "../src/resource-listener";
 import {tap} from "rxjs/operators";
