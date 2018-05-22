@@ -42,7 +42,7 @@ export const rabbitmqConnectionURI = ({host, user, pass, port = 5672}: Connectio
     return `amqp://${_auth}${host}${_port}`
 }
 
-export const rabbitmqObservable = (rabbitChannel, exchange: string): Observable<PubSubMessage<any>> => {
+export const rabbitmqSubscribe = (rabbitChannel, exchange: string): Observable<PubSubMessage<any>> => {
     let subject = new Subject<PubSubMessage<any>>()
 
     rabbitChannel.assertExchange(exchange, 'fanout', {durable: false})

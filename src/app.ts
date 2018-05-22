@@ -5,7 +5,7 @@ import * as amqplib from 'amqplib'
 
 import {config, env, initEnvironment} from "node-laravel-config";
 import * as configHelper from "./config";
-import {createRabbitMQConnection, rabbitmqObservable} from "./lib/amqplib-pubsub";
+import {createRabbitMQConnection, rabbitmqSubscribe} from "./lib/amqplib-pubsub";
 import {tap} from "rxjs/operators";
 import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "./resource-listener";
 import {createConnection} from "typeorm";
@@ -53,7 +53,7 @@ rabbit$
 
 // publish resource.created events
 rabbit$.then( ({ channel }) =>
-    rabbitmqObservable(channel, RESOURCE_CREATED_TOPIC)
+    rabbitmqSubscribe(channel, RESOURCE_CREATED_TOPIC)
         .pipe( tap(console.log) )
         .subscribe( msg => resourceCreatedObservable$.next(msg) ) )
 
