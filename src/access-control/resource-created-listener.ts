@@ -1,13 +1,16 @@
 import * as Joi from 'joi'
-
-import {PubSubMessage} from "../lib/amqplib-pubsub";
-import {Subject} from "rxjs/Subject";
-import {createResourcePolicy} from "./resource-policy-maker";
-import {filter} from 'rxjs/operators';
+import * as lodash from 'lodash'
+import { PubSubMessage } from "../lib/amqplib-pubsub";
+import { Subject } from "rxjs/Subject";
+import { createResourcePolicy } from "./resource-policy-maker";
+import { filter, map, tap } from 'rxjs/operators';
 
 const resourceCreatedSchema = {
     resourceType: Joi.string(),
-    resourceID: Joi.string().required()
+    resourceID: Joi.string().required(),
+    parentType: Joi.any().optional(),
+    parentID: Joi.string().optional(),
+    ownerID: Joi.any().optional()
 }
 
 
@@ -25,9 +28,23 @@ export const resourceCreatedObservable$ = new Subject<PubSubMessage<ResourceCrea
 
 resourceCreatedObservable$
     .pipe(
-        filter( msg => {
-            let {error} = Joi.validate(msg.data, resourceCreatedSchema)
-            if(error) {
+        tap(console.log),
+        map(msg => {
+            // sanitizer function
+            msg.data.resourceID = "" + msg.data.resourceID
+
+            // handle nulls
+            msg.data = lodash.pickBy(msg.data, lodash.identity)
+
+            // parentID
+            if(msg.data.parentID) msg.data.parentID = "" + msg.data.parentID
+
+            return msg
+        }),
+        tap( msg => console.log('after sanitizing', msg.data)),
+        filter(msg => {
+            let { error } = Joi.validate(msg.data, resourceCreatedSchema)
+            if (error) {
                 console.log('Received "resource.created" event with invalid schema', error.details)
                 return false
             }

@@ -1,11 +1,14 @@
 const glob = require('glob')
+import * as dotenv from 'dotenv'
 
 import {entities as dbmodels} from "../entities";
 import {createConnection} from "typeorm";
 
 import * as configHeler from '../../config'
-import {config} from "node-laravel-config";
+import {config, env, initEnvironment} from "node-laravel-config";
 
+dotenv.config({ path: ".env" });
+initEnvironment(process.env)
 configHeler.loadConfigurationSettings()
 
 let seeders = []
@@ -36,6 +39,6 @@ createConnection({
     console.log('Done Seeding')
     process.exit(0)
 }).catch( err => {
-    console.log('Seeding Failed')
+    console.log('Seeding Failed', err)
     process.exit(1)
 })

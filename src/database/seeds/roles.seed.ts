@@ -17,9 +17,11 @@ const roles = [
 
 seedDatabase("Setup Roles", async connection => {
     let rolesRepo = connection.getRepository(Role)
-    roles.forEach( async role => {
-        if( await rolesRepo.findOne({ name: role.name }) )
-            return
-        rolesRepo.insert(role)
-    })
+    await Promise.all(
+        roles.map( async role => {
+            let result = await rolesRepo.save(role)
+            console.log("saved: ", role, result)
+            return result
+        })
+    )
 })

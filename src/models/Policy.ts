@@ -1,4 +1,4 @@
-import {Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn} from "typeorm";
+import {Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Resource} from "./Resource";
 import {Binding} from "./Binding";
 
@@ -6,8 +6,8 @@ import {Binding} from "./Binding";
 @Entity()
 export class Policy {
 
-    @PrimaryColumn()
-    id: string
+    @PrimaryGeneratedColumn()
+    id: number
 
     @OneToOne(type => Resource)
     @JoinColumn()

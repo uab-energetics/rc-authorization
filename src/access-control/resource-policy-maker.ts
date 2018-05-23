@@ -35,28 +35,28 @@ export let createResourcePolicy = async (event: ResourceCreatedPayload) => {
 
     policy = policyRepo.create({ resource: resource })
 
-    if(parentType)
-        parent = await resRepo.findOneOrFail(resourceKey(parentType, parentID))
+    try {
+        await resRepo.save(resource)
+        console.log('resource')
+        await policyRepo.save(policy)
+        console.log('policy')
 
-    if(ownerID) {
-        identity = identityRepo.create({ user_id: ownerID })
-        binding = bindingRepo.create({
-            role: defaultRole,
-            members: [ identity ],
-            policy: policy
-        })
+        if(parentType)
+            parent = await resRepo.findOneOrFail(resourceKey(parentType, parentID))
+
+        if(ownerID) {
+            identity = identityRepo.create({ user_id: ownerID })
+            await identityRepo.save(identity)
+
+            binding = bindingRepo.create({
+                role: defaultRole,
+                members: [ identity ],
+                policy: policy
+            })
+            await bindingRepo.save(binding)
+        }
+    } catch (e) {
+        console.log('error: ', e)
     }
 
-    await resRepo.save(resource)
-    await policyRepo.save(policy)
-    if(binding) {
-        await identityRepo.save(identity)
-        bindingRepo.save(binding)
-    }
-
-
-
-    // TODO - union/inherit the parent policy
-
-    return resRepo.save(resource) // save() does an upsert
 }

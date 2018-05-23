@@ -1,4 +1,4 @@
-import {Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, JoinTable} from "typeorm";
 import {Policy} from "./Policy";
 import {Role} from "./Role";
 import {Identity} from "./Identity";
@@ -8,7 +8,7 @@ import {Identity} from "./Identity";
 export class Binding {
 
     @PrimaryGeneratedColumn()
-    id: string
+    id: number
 
     @ManyToOne(type => Policy, policy => policy.bindings)
     policy: Policy
@@ -17,5 +17,6 @@ export class Binding {
     role: Role
 
     @ManyToMany(type => Identity, identity => identity.bindings)
+    @JoinTable()
     members: Identity[]
 }
