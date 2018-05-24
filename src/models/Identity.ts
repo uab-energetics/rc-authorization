@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, Index, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
 import {Binding} from "./Binding";
 
 
@@ -8,7 +8,8 @@ export class Identity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column('text')
+    @Column()
+    @Index({unique: true})
     user_id: string
 
     @ManyToMany(type => Binding, binding => binding.members)

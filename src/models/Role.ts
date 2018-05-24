@@ -1,4 +1,4 @@
-import {Column, Entity, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, JoinTable} from "typeorm";
+import {Column, Entity, ManyToMany, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, JoinTable, Index} from "typeorm";
 import {Permission} from "./Permission";
 import {Binding} from "./Binding";
 
@@ -9,7 +9,8 @@ export class Role {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column('text')
+    @Column()
+    @Index({unique: true})
     name: string
 
     @ManyToMany(type => Permission, permission => permission.roles)
