@@ -10,6 +10,7 @@ import {tap} from "rxjs/operators";
 import {createConnection} from "typeorm";
 import {entities as dbmodels} from "./database/entities";
 import {RESOURCE_CREATED_TOPIC, resourceCreatedObservable$} from "./access-control/resource-created-listener";
+import {router} from "./routes";
 
 /* LOAD ENVIRONMENT VALUES */
 dotenv.config({ path: ".env" });
@@ -59,5 +60,7 @@ rabbit$.then( ({ channel }) =>
 
 app.on('mysql-connected', _ => console.log('connected to mysql'))
 app.on('rabbitmq-connected', _ => console.log('connected to rabbitmq'))
+
+app.use(router)
 
 export { app }
