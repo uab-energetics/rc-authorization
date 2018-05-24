@@ -18,11 +18,13 @@ services:
       MYSQL_DATABASE: authorization
       MYSQL_USER: root
       MYSQL_PASSWORD: secret
+    ports:
+      - 8002:5000
 
   rc-authorization-db:
     image: mysql:5.7
     ports:
-      - 3306:3306
+      - 33060:3306
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: secret
