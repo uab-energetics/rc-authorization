@@ -1,40 +1,40 @@
 import express from 'express'
 import * as AuthService from "./AuthService";
+import {resourceKey} from "./access-control/resource-policy-maker";
+import {entityExists} from "./validation/validators";
+import {Identity} from "./models/Identity";
+import {Resource} from "./models/Resource";
+import {Permission} from "./models/Permission";
 
 
 export const router = express.Router()
 
+let logBody = (req, res, next) => {
+    console.log(req.body)
+    next()
+}
 
-router.post('/check', (req, res) => {
-    let identityPromise = AuthService.findIdentity(req.body.identity_id)
-        .then(identity => {
-            if (!identity)
-                res.status(404).json({status: 'IDENTITY_NOT_FOUND'})
-            return identity
-        })
-    let resourcePromise = AuthService.findResource(req.body.resource_type, req.body.resource_id)
-        .then(resource => {
-            if (!resource)
-                res.status(404).json({status: 'RESOURCE_NOT_FOUND'})
-            return resource
-        })
-    let permissionPromise = AuthService.findPermission(req.body.permission)
-        .then(permission => {
-            if (!permission)
-                res.status(404).json({status: 'PERMISSION_NOT_FOUND'})
-            return permission
-        })
+let concatResID = (req, res, next) => {
+    req.body.resource_id = resourceKey(req.body.resource_type, req.body.resource_id)
+    next()
+}
 
-    Promise.all([identityPromise, resourcePromise, permissionPromise])
-        .then( ([identity, resource, permission]) => {
-            AuthService.isAuthorized(identity, resource, permission)
-                .then( authorized => {
-                    if (authorized === false) {
-                        res.status(401).json({status: 'UNAUTHORIZED'})
-                    }
-                    res.status(200).send()
-                } )
-        })
-        .catch( err => res.status(500).json(err))
+router.post('/check',
+    concatResID,
+    entityExists('identity_id', 'user_id', Identity),
+    entityExists('resource_id', 'id', Resource),
+    entityExists('permission', 'name', Permission),
+    (req, res) => {
+        // resource_id is the type and the client id
+        let {identity_id, resource_id, permission} = req.body
 
-})
+        AuthService.isAuthorized(identity_id, resource_id, permission)
+            .then( authorized => {
+                if (authorized === false) {
+                    res.status(401).json({status: 'UNAUTHORIZED'})
+                }
+                res.status(200).json({status: 'AUTHORIZED'})
+            } )
+
+    }
+)
