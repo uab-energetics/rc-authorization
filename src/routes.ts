@@ -32,6 +32,7 @@ router.post('/check',
             .then( authorized => {
                 if (authorized === false) {
                     res.status(401).json({status: 'UNAUTHORIZED'})
+                    return
                 }
                 res.status(200).json({status: 'AUTHORIZED'})
             } )
