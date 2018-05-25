@@ -9,7 +9,7 @@ services:
 
   rc-authorization:
     build: .
-    container_name: rc-authorization
+    container_name: rc-authorization-dev
     volumes:
       - ./:/app
     environment:
